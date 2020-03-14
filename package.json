@@ -5,8 +5,8 @@
   "repository": "https://github.com/viniciusflores/FastFeetBackend.git",
   "license": "MIT",
   "scripts": {
-    "deve": "nodemon src/server.js",
-    "deve-debug": "nodemon --inspect src/server.js"
+    "dev": "nodemon src/server.js",
+    "dev-debug": "nodemon --inspect src/server.js"
   },
   "dependencies": {
     "@sentry/node": "^5.14.0",

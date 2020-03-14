@@ -11,7 +11,7 @@ import multerConfig from './config/multer';
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/login', SessionController.login);
+routes.post('/login', SessionController.store);
 
 routes.use(authMiddleware);
 
@@ -20,6 +20,10 @@ routes.put('/updateRecipient', RecipientController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
+routes.get('/deliveryman/:deliverymanId', DeliverymanController.show);
+routes.get('/deliveryman', DeliverymanController.index);
 routes.post('/deliveryman', DeliverymanController.store);
+routes.put('/deliveryman/:deliverymanId', DeliverymanController.update);
+routes.delete('/deliveryman/:deliverymanId', DeliverymanController.destroy);
 
 module.exports = routes;
