@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
 import Delivery from '../models/Delivery';
 import Deliveryman from '../models/Deliveryman';
 import File from '../models/File';
@@ -49,21 +48,48 @@ class DeliveryController {
   }
 
   async store(req, res) {
-    // const { canceled_at, end_date } = null;
+    const schema = Yup.object().shape({
+      product: Yup.string().required(),
+      recipient_id: Yup.number().required(),
+      deliveryman_id: Yup.number().required(),
+    });
 
-    const { product, recipient_id, deliveryman_id, start_date } = req.body;
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
 
-    const hourStart = startOfHour(parseISO(start_date));
+    const { product, recipient_id, deliveryman_id } = req.body;
 
-    if (isBefore(hourStart, new Date())) {
-      return res.status(400).json({ error: 'Past dates are not permitted' });
+    /**
+     * Check is deliveryman id is a deliveryman
+     */
+    const isDeliveryman = await Deliveryman.findOne({
+      id: deliveryman_id,
+    });
+
+    if (!isDeliveryman) {
+      return res
+        .status(401)
+        .json({ error: 'You can only create deliveries with deliverymans' });
+    }
+
+    /**
+     * Check is recipient id is a recipient
+     */
+    const isRecipient = await Recipient.findOne({
+      id: recipient_id,
+    });
+
+    if (!isRecipient) {
+      return res
+        .status(401)
+        .json({ error: 'You can only create deliveries with recipients' });
     }
 
     const { id } = await Delivery.create({
       product,
       recipient_id,
       deliveryman_id,
-      start_date: hourStart,
     });
 
     return res.json({
@@ -71,28 +97,8 @@ class DeliveryController {
       product,
       recipient_id,
       deliveryman_id,
-      hourStart,
     });
   }
-
-  // const schema = Yup.object().shape({
-  //   name: Yup.string().required(),
-  //   email: Yup.string()
-  //     .email()
-  //     .required(),
-  // });
-
-  // if (!(await schema.isValid(req.body))) {
-  //   return res.status(400).json({ error: 'Validation fails' });
-  // }
-
-  // const userExists = await Deliveryman.findOne({
-  //   where: { email: req.body.email },
-  // });
-
-  // if (userExists) {
-  //   return res.status(400).json({ error: 'Deliveryman already exists.' });
-  // }
 
   // async show(req, res) {
   //   const { deliverymanId } = req.params;
