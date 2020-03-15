@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
+import DeliveryController from './app/controllers/DeliveryController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import FileController from './app/controllers/FileController';
 import RecipientController from './app/controllers/RecipientController';
@@ -15,10 +16,14 @@ routes.post('/login', SessionController.store);
 
 routes.use(authMiddleware);
 
-routes.post('/createRecipient', RecipientController.store);
-routes.put('/updateRecipient', RecipientController.update);
+routes.get('/recipient', RecipientController.index);
+routes.post('/recipient', RecipientController.store);
+routes.put('/recipient', RecipientController.update);
 
 routes.post('/files', upload.single('file'), FileController.store);
+
+routes.get('/delivery', DeliveryController.index);
+routes.post('/delivery', DeliveryController.store);
 
 routes.get('/deliveryman/:deliverymanId', DeliverymanController.show);
 routes.get('/deliveryman', DeliverymanController.index);
