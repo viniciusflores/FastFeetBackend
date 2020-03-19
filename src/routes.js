@@ -3,6 +3,8 @@ import multer from 'multer';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import FileController from './app/controllers/FileController';
+import FinishDeliveryController from './app/controllers/FinishDeliveryController';
+import NotificationController from './app/controllers/NotificationController';
 import RecipientController from './app/controllers/RecipientController';
 import SessionController from './app/controllers/SessionController';
 import WithdrawalController from './app/controllers/WithdrawalController';
@@ -31,6 +33,11 @@ routes.get('/deliveryman', DeliverymanController.index);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman/:deliverymanId', DeliverymanController.update);
 routes.delete('/deliveryman/:deliverymanId', DeliverymanController.destroy);
+
+routes.post('/finishDelivery/:deliveryId', FinishDeliveryController.store);
+
+routes.get('/notifications', NotificationController.index);
+routes.put('/notifications/:id', NotificationController.update);
 
 routes.post('/withdrawal/:deliveryId', WithdrawalController.store);
 
